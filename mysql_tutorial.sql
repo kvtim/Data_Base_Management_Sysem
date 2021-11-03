@@ -226,7 +226,7 @@ ORDER BY 1,2; -- sort by continent and region
 
 SELECT continent, region, SUM(population) -- show population on regions
 FROM country
-GROUP BY 1,2 WITH ROLLUP;-- grouping by continent and region and show sum of population on continents
+GROUP BY 1,2 WITH ROLLUP;-- grouping by continent and region and show sum of population on continents; ROLL UP - string of sum
 
 SELECT continent, SUM(population)
 FROM country
