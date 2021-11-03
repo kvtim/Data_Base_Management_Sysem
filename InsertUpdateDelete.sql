@@ -20,9 +20,9 @@ select * from shop;
 
 INSERT INTO shop
 VALUES
-(NULL, 'Electronics shop', 'electronicsshop@gmail.com', '888888', 1),
-(NULL, 'Cars shop', 'carsshop@gmail.com', '999999', 2),
-(NULL, 'Sports shop', 'electronicshop@gmail.com', '777777', 3);
+(NULL, 'Electronics shop', 1),
+(NULL, 'Cars shop', 2),
+(NULL, 'Sports shop', 3);
 
 select * from shop;
 
@@ -31,14 +31,14 @@ select * from category;
 
 INSERT INTO category
 VALUES
-(NULL, 'Phones', 1),
-(NULL, 'Notebooks', 1),
-(NULL, 'Tablets', 1),
-(NULL, 'Cars', 2),
-(NULL, 'Trucks', 2),
-(NULL, 'Snowboards', 3),
-(NULL, 'Sport shoes', 3),
-(NULL, 'Spors clothes', 3);
+(NULL, 'Phones'),
+(NULL, 'Notebooks'),
+(NULL, 'Tablets'),
+(NULL, 'Cars'),
+(NULL, 'Trucks'),
+(NULL, 'Snowboards'),
+(NULL, 'Sport shoes'),
+(NULL, 'Spors clothes');
 
 select * from category;
 
@@ -81,6 +81,30 @@ VALUES
 (NULL, 'User3', 'SurUser3', 'user3@gmail.com', '999999', DEFAULT);
 
 select * from customer;
+
+desc manager;
+select * from manager;
+
+INSERT INTO manager
+VALUES
+(NULL, 'Manager1', 'SurManager1', 'manager1@gmail.com', '444444', DEFAULT),
+(NULL, 'Manager2', 'SurManager2', 'manager2@gmail.com', '666666', DEFAULT),
+(NULL, 'Manager3', 'SurManager3', 'manager3@gmail.com', '111111', DEFAULT);
+
+select * from manager;
+
+desc manager_to_shop;
+select * from manager_to_shop;
+
+INSERT INTO manager_to_shop
+VALUES
+(1, 1),
+(1, 2),
+(2, 2),
+(3, 1),
+(3, 3);
+
+select * from manager_to_shop;
 
 desc `order`;
 select * from `order`;
@@ -217,13 +241,13 @@ select * from address;
 
 INSERT INTO shop
 VALUES
-(NULL, 'Some shop', 'someshop@gmail.com', 'someshoppassword', 1);
+(NULL, 'Some shop', 1);
 
 select * from shop;
 
 INSERT INTO category
 VALUES
-(NULL, 'Some category', 4);
+(NULL, 'Some category');
 
 select * from category;
 
@@ -233,8 +257,30 @@ VALUES
 
 select * from product;
 
-DELETE FROM shop -- category and product will be deleted
+INSERT INTO manager
+VALUES
+(NULL, 'Manager4', 'SurManager4', 'manager4@gmail.com', '123456', DEFAULT);
+
+INSERT INTO manager_to_shop
+VALUES
+(4, 1),
+(4, 2);
+
+select * from manager;
+select * from manager_to_shop;
+
+DELETE FROM manager -- manager_to_shop will be deleted
+WHERE managerid = 4;
+
+DELETE FROM shop -- product will be deleted
 WHERE shopid = 4;
+
+DELETE FROM category
+WHERE categoryid = 9;
+
+select * from manager;
+
+select * from manager_to_shop;
 
 select * from shop;
 
