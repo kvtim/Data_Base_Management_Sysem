@@ -4,216 +4,228 @@ show tables;
 
 -- INSERT
 
-desc address;
-select * from address;
+DROP PROCEDURE IF EXISTS add_brand;
 
-INSERT INTO address
-VALUES
-(NULL, 'Belarus, Minsk, Electronic street, 21', 'Electronic street, 21'),
-(NULL, 'Belarus, Minsk, Cars street, 45', 'Cars street, 45'),
-(NULL, 'Belarus, Minsk, Sprts street 77', 'Sports street 77');
+DELIMITER //
+CREATE PROCEDURE add_brand(IN b_name VARCHAR(100))
+BEGIN
+	INSERT INTO brand
+	VALUES
+	(NULL, b_name);
+END//
 
-select * from address;
+DELIMITER ;
 
-desc shop;
-select * from shop;
+CALL add_brand('Apple');
+CALL add_brand('Xiaomi');
+CALL add_brand('ASUS');
+CALL add_brand('BMW');
+CALL add_brand('Audi');
 
-INSERT INTO shop
-VALUES
-(NULL, 'Electronics shop', 1),
-(NULL, 'Cars shop', 2),
-(NULL, 'Sports shop', 3);
 
-select * from shop;
+DROP PROCEDURE IF EXISTS add_category;
 
-desc category;
-select * from category;
+DELIMITER //
+CREATE PROCEDURE add_category(IN c_name VARCHAR(45))
+BEGIN
+	INSERT INTO category
+	VALUES
+	(NULL, c_name);
+END//
 
-INSERT INTO category
-VALUES
-(NULL, 'Phones'),
-(NULL, 'Notebooks'),
-(NULL, 'Tablets'),
-(NULL, 'Cars'),
-(NULL, 'Trucks'),
-(NULL, 'Snowboards'),
-(NULL, 'Sport shoes'),
-(NULL, 'Spors clothes');
+DELIMITER ;
 
-select * from category;
+CALL add_category('Phones');
+CALL add_category('Notebooks');
+CALL add_category('Cars');
 
-desc product;
-select * from product;
 
-INSERT INTO product
-VALUES
-(NULL, 'Iphone 12', 1000, 3, 1, 1),
-(NULL, 'Iphone 4s', 1500, 1, 1, 1),
-(NULL, 'ASUS ZenBook', 2000, 3, 1, 2),
-(NULL, 'Apple MacBook', 2500, 2, 1, 2),
-(NULL, 'Apple IPad Pro', 900, 6, 1, 3),
-(NULL, 'Apple IPad Mini', 700, 5, 1, 3),
-(NULL, 'BMW M3', 70000, 3, 2, 4),
-(NULL, 'Audi RS6', 80000, 1, 2, 4),
-(NULL, 'Mercedes-Benz E63 AMG', 100000, 1, 2, 4),
-(NULL, 'MAN TGS', 150000, 2, 2, 5),
-(NULL, 'IVECO STRALIS', 170000, 3, 2, 5),
-(NULL, 'Burton Blunt', 400, 3, 3, 6),
-(NULL, 'DC Shoes Biddy', 500, 2, 3, 6),
-(NULL, 'Adidas Campus', 150, 7, 3, 7),
-(NULL, 'New Balance 574', 140, 6, 3, 7),
-(NULL, 'Adidas Stan Smith', 160, 5, 3, 7),
-(NULL, 'Sports trousers Nike', 100, 7, 3, 8),
-(NULL, 'Sports trousers Adidas', 120, 6, 3, 8),
-(NULL, 'Sports jersey Adidas', 70, 10, 3, 8),
-(NULL, 'Sports jersey New Balance', 60, 12, 3, 8),
-(NULL, 'Sport jacket Quicksilver', 170, 15, 3, 8);
+DROP PROCEDURE IF EXISTS add_brand_to_category;
 
-select * from product;
+DELIMITER //
+CREATE PROCEDURE add_brand_to_category(IN b_id INT, IN c_id INT)
+BEGIN
+	INSERT INTO brand_to_category
+	VALUES
+	(b_id, c_id);
+END//
 
-desc customer;
-select * from customer;
+DELIMITER ;
 
-INSERT INTO customer
-VALUES
-(NULL, 'User1', 'SurUser1', 'user1@gmail.com', '333333', DEFAULT),
-(NULL, 'User2', 'SurUser2', 'user2@gmail.com', '555555', DEFAULT),
-(NULL, 'User3', 'SurUser3', 'user3@gmail.com', '999999', DEFAULT);
+CALL add_brand_to_category(1, 1);
+CALL add_brand_to_category(1, 2);
+CALL add_brand_to_category(2, 1);
+CALL add_brand_to_category(3, 2);
+CALL add_brand_to_category(5, 3);
+CALL add_brand_to_category(4, 3);
 
-select * from customer;
 
-desc manager;
-select * from manager;
+DROP PROCEDURE IF EXISTS add_product;
 
-INSERT INTO manager
-VALUES
-(NULL, 'Manager1', 'SurManager1', 'manager1@gmail.com', '444444', DEFAULT),
-(NULL, 'Manager2', 'SurManager2', 'manager2@gmail.com', '666666', DEFAULT),
-(NULL, 'Manager3', 'SurManager3', 'manager3@gmail.com', '111111', DEFAULT);
+DELIMITER //
+CREATE PROCEDURE add_product(IN p_name VARCHAR(45), IN p_description VARCHAR(200),
+IN p_price INT, c_id INT, b_id INT)
+BEGIN
+	INSERT INTO product
+	VALUES
+	(NULL, p_name, p_description, p_price, c_id, b_id);
+END//
 
-select * from manager;
+DELIMITER ;
 
-desc manager_to_shop;
-select * from manager_to_shop;
+CALL add_product('Iphone 12', 'Good phone!', 1000, 1, 1);
+CALL add_product('Xiaomi Redmi', 'Not good phone', 1500, 1, 2);
+CALL add_product('ASUS ZenBook', 'Good notebook!', 2000, 2, 3);
+CALL add_product('Apple MacBook', 'Good nout!', 2500, 2, 1);
+CALL add_product('BMW M3', 'Good car!', 70000, 3, 4);
+CALL add_product('Audi RS6', 'fast car!', 80000, 3, 5);
 
-INSERT INTO manager_to_shop
-VALUES
-(1, 1),
-(1, 2),
-(2, 2),
-(3, 1),
-(3, 3);
+DROP PROCEDURE IF EXISTS add_role;
 
-select * from manager_to_shop;
+DELIMITER //
+CREATE PROCEDURE add_role(IN n VARCHAR(45))
+BEGIN
+	INSERT INTO role
+	VALUES
+	(NULL, n);
+END//
 
-desc `order`;
-select * from `order`;
+DELIMITER ;
 
-INSERT INTO `order`
-VALUES
-(NULL, 'Order for User1', 'formalized', DEFAULT, 0, 1),
-(NULL, 'Order for User2', 'formalized', DEFAULT, 0, 2),
-(NULL, 'Order for User3', 'formalized', DEFAULT, 0, 3);
+CALL add_role('user');
+CALL add_role('admin');
 
-select * from `order`;
 
-desc order_to_product;
-select * from order_to_product;
+DROP PROCEDURE IF EXISTS add_customer;
 
-INSERT INTO order_to_product
-VALUES
-(1, 3),
-(1, 15),
-(1, 6),
-(2, 18),
-(2, 10),
-(2, 15),
-(3, 10),
-(3, 17),
-(3, 20),
-(3, 12),
-(3, 3);
+DELIMITER //
+CREATE PROCEDURE add_customer(IN c_name VARCHAR(45), IN c_surname VARCHAR(45),
+IN c_email VARCHAR(255), IN c_password VARCHAR(32))
+BEGIN
+	INSERT INTO customer
+	VALUES
+	(NULL, c_name, c_surname, c_email, c_password, DEFAULT, DEFAULT);
+END//
 
-select * from order_to_product;
+DELIMITER ;
 
-INSERT INTO address
-VALUES
-(NULL, 'Belarus, Minsk, Delivery street, 10', 'Delivery street, 10'),
-(NULL, 'Belarus, Minsk, Some street, 39', 'Some street, 39');
+CALL add_customer('Admin', 'SurAdmin', 'admin@gmail.com', '333333');
+CALL add_customer('User2', 'SurUser2', 'user2@gmail.com', '555555');
+CALL add_customer('User3', 'SurUser3', 'user3@gmail.com', '999999');
 
-select * from address;
 
-desc delivery;
-select * from delivery;
+DROP PROCEDURE IF EXISTS add_order;
 
-INSERT INTO delivery
-VALUES
-(NULL, 'Delivery for User1', 1, 4),
-(NULL, 'Delivery for User3', 3, 5);
+DELIMITER //
+CREATE PROCEDURE add_order(IN o_name VARCHAR(45),
+ IN o_price INT, IN customer_id INT)
+BEGIN
+	INSERT INTO `order`
+	VALUES
+	(NULL, o_name, DEFAULT, DEFAULT, o_price, customer_id);
+END//
 
-select * from delivery;
+DELIMITER ;
+
+CALL add_order('Order for User1', 0, 2);
+CALL add_order('Order for User2', 0, 2);
+CALL add_order('Order for User3', 0, 3);
+
+
+DROP PROCEDURE IF EXISTS add_order_to_product;
+
+DELIMITER //
+CREATE PROCEDURE add_order_to_product(IN order_id VARCHAR(45), IN product_id INT)
+BEGIN
+	INSERT INTO order_to_product
+	VALUES
+	(order_id, product_id);
+END//
+
+DELIMITER ;
+
+CALL add_order_to_product(1, 3);
+CALL add_order_to_product(1, 5);
+CALL add_order_to_product(1, 6);
+CALL add_order_to_product(2, 1);
+CALL add_order_to_product(2, 3);
+CALL add_order_to_product(3, 1);
+CALL add_order_to_product(3, 2);
+CALL add_order_to_product(3, 3);
+
+
+DROP PROCEDURE IF EXISTS add_delivery;
+
+DELIMITER //
+CREATE PROCEDURE add_delivery(IN d_name VARCHAR(45),
+ IN d_address VARCHAR(100), IN order_id INT)
+BEGIN
+	INSERT INTO delivery
+	VALUES
+	(NULL, d_name, d_address, order_id);
+END//
+
+DELIMITER ;
+
+CALL add_delivery('Delivery for User1', 'Delivery street, 10', 1);
+CALL add_delivery('Delivery for User3', 'Some street, 39', 3);
 
 
 -- UPDATE
 
-select * from `order`;
+DROP PROCEDURE IF EXISTS update_order_status;
 
-UPDATE `order`
-SET order_status = 'sent'
-WHERE orderid = 1;
+DELIMITER //
+CREATE PROCEDURE update_order_status(IN o_status ENUM('formalized', 'sent', 'delivered'),
+IN o_id INT)
+BEGIN
+	UPDATE `order`
+	SET order_status = o_status
+	WHERE orderid = o_id;
+END//
 
-UPDATE `order`
-SET order_status = 'sent'
-WHERE orderid = 3;
+DELIMITER ;
 
-select * from `order`;
+CALL update_order_status('sent', 1);
+CALL update_order_status('sent', 3);
 
-UPDATE `order`
-SET order_price = order_price + 5000
-WHERE orderid = 1;
 
-UPDATE `order`
-SET order_price = order_price + 3000
-WHERE orderid = 2;
+DROP PROCEDURE IF EXISTS update_add_to_order_price;
 
-UPDATE `order`
-SET order_price = order_price + 7000
-WHERE orderid = 3;
+DELIMITER //
+CREATE PROCEDURE update_add_to_order_price(IN price INT, IN o_id INT)
+BEGIN
+	UPDATE `order`
+	SET order_price = order_price + price
+	WHERE orderid = o_id;
+END//
 
-UPDATE `order`
-SET order_price = order_price + 5000
-WHERE orderid = 2;
+DELIMITER ;
 
-select * from `order`;
+CALL update_add_to_order_price(5000, 1);
+CALL update_add_to_order_price(3000, 2);
+CALL update_add_to_order_price(7000, 3);
+CALL update_add_to_order_price(5000, 2);
 
-select * from address;
 
-INSERT INTO address
-VALUES
-(NULL, 'Belarus, Minsk, Some Unknown street, 39', 'Some Unknown street, 39');
+DROP PROCEDURE IF EXISTS update_product_price;
 
-select * from address;
+DELIMITER //
+CREATE PROCEDURE update_product_price(IN price INT, IN p_id INT)
+BEGIN
+	UPDATE product
+	SET product_price = price
+	WHERE productid = p_id;
+END//
 
-REPLACE INTO address
-VALUES (6, 'Belarus, Minsk, Some Delivery street, 39', 'Belarus, Minsk, Some Delivert street, 39');
+DELIMITER ;
 
-select * from address;
+CALL update_product_price(750, 2);
 
-select * from delivery;
 
-UPDATE delivery
-SET address_id = 6
-WHERE deliveryid = 2;
 
-select * from delivery;
 
-select * from product;
 
-UPDATE product
-SET product_price = 750
-WHERE productid = 6;
-
-select * from product;
 
 select * from delivery;
 
@@ -231,58 +243,38 @@ WHERE orderid = 3;
 
 select * from `order`;
 
-select * from address;
-
-DELETE FROM address -- delete the last field
-ORDER BY addressid DESC
-LIMIT 1;
-
-select * from address;
-
-INSERT INTO shop
+INSERT INTO brand
 VALUES
-(NULL, 'Some shop', 1);
-
-select * from shop;
+(NULL, 'Some brand');
 
 INSERT INTO category
 VALUES
 (NULL, 'Some category');
 
+INSERT INTO brand_to_category
+VALUES
+(6, 1),
+(1, 4);
+
 select * from category;
 
 INSERT INTO product
 VALUES
-(NULL, 'Some product', 1000000, 300, 4, 9);
+(NULL, 'Some product1', 1000000, 300, 1, 6);
+
+INSERT INTO product
+VALUES
+(NULL, 'Some product2', 1000000, 300, 4, 4);
 
 select * from product;
 
-INSERT INTO manager
-VALUES
-(NULL, 'Manager4', 'SurManager4', 'manager4@gmail.com', '123456', DEFAULT);
+DELETE FROM brand -- brand_to_category and SomeProduct2 will be deleted
+WHERE brandid = 6;
 
-INSERT INTO manager_to_shop
-VALUES
-(4, 1),
-(4, 2);
+DELETE FROM category -- brand_to_category and SomeProduct1 will be deleted  
+WHERE categoryid = 4;
 
-select * from manager;
-select * from manager_to_shop;
-
-DELETE FROM manager -- manager_to_shop will be deleted
-WHERE managerid = 4;
-
-DELETE FROM shop -- product will be deleted
-WHERE shopid = 4;
-
-DELETE FROM category
-WHERE categoryid = 9;
-
-select * from manager;
-
-select * from manager_to_shop;
-
-select * from shop;
+select * from brand;
 
 select * from category;
 
