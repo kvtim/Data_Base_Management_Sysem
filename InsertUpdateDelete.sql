@@ -21,6 +21,8 @@ CALL add_brand('Xiaomi');
 CALL add_brand('ASUS');
 CALL add_brand('BMW');
 CALL add_brand('Audi');
+CALL add_brand('Huawei');
+
 
 
 DROP PROCEDURE IF EXISTS add_category;
@@ -135,23 +137,24 @@ CALL add_order('Order for User3', 0, 3);
 DROP PROCEDURE IF EXISTS add_order_to_product;
 
 DELIMITER //
-CREATE PROCEDURE add_order_to_product(IN order_id VARCHAR(45), IN product_id INT)
+CREATE PROCEDURE add_order_to_product(IN order_id VARCHAR(45), IN product_id INT, 
+IN product_count INT)
 BEGIN
 	INSERT INTO order_to_product
 	VALUES
-	(order_id, product_id);
+	(order_id, product_id, product_count);
 END//
 
 DELIMITER ;
 
-CALL add_order_to_product(1, 3);
-CALL add_order_to_product(1, 5);
-CALL add_order_to_product(1, 6);
-CALL add_order_to_product(2, 1);
-CALL add_order_to_product(2, 3);
-CALL add_order_to_product(3, 1);
-CALL add_order_to_product(3, 2);
-CALL add_order_to_product(3, 3);
+CALL add_order_to_product(1, 3, 1);
+CALL add_order_to_product(1, 5, 3);
+CALL add_order_to_product(1, 6, 2);
+CALL add_order_to_product(2, 1, 1);
+CALL add_order_to_product(2, 3, 1);
+CALL add_order_to_product(3, 1, 3);
+CALL add_order_to_product(3, 2, 4);
+CALL add_order_to_product(3, 3, 1);
 
 
 DROP PROCEDURE IF EXISTS add_delivery;
@@ -208,6 +211,27 @@ CALL update_add_to_order_price(7000, 3);
 CALL update_add_to_order_price(5000, 2);
 
 
+DROP PROCEDURE IF EXISTS update_product;
+
+DELIMITER //
+CREATE PROCEDURE update_product(IN p_id INT, IN p_name VARCHAR(45), IN p_description VARCHAR(200),
+IN p_price INT, IN c_id INT, IN b_id INT)
+BEGIN
+	UPDATE product
+	SET 
+    product_name = p_name,
+    product_description = p_description,
+    product_price = p_price,
+    category_id = c_id,
+    brand_id = b_id
+	WHERE productid = p_id;
+END//
+
+DELIMITER ;
+
+-- CALL update_product(750, 2);
+
+
 DROP PROCEDURE IF EXISTS update_product_price;
 
 DELIMITER //
@@ -223,6 +247,32 @@ DELIMITER ;
 CALL update_product_price(750, 2);
 
 
+DROP PROCEDURE IF EXISTS delete_product;
+
+DELIMITER //
+CREATE PROCEDURE delete_product(IN p_id INT)
+BEGIN
+	DELETE FROM product
+	WHERE productid = p_id;
+END//
+
+DELIMITER ;
+
+CALL delete_product(300);
+
+
+DROP PROCEDURE IF EXISTS delete_order;
+
+DELIMITER //
+CREATE PROCEDURE delete_order(IN o_id INT)
+BEGIN
+	DELETE FROM `order`
+	WHERE orderid = o_id;
+END//
+
+DELIMITER ;
+
+CALL delete_order(1);
 
 
 

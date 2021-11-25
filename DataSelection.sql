@@ -2,13 +2,246 @@ use mydb;
 
 show tables;
 
-SELECT
-product_name, 
-product_price, 
-product_count, 
-product_price * product_count AS total_price
-FROM product
-ORDER BY total_price, product_count DESC;
+DROP PROCEDURE IF EXISTS select_all_customers;
+
+DELIMITER //
+CREATE PROCEDURE select_all_customers()
+BEGIN
+	SELECT * FROM customer;
+END//
+
+DELIMITER ;
+
+CALL select_all_customers();
+
+
+DROP PROCEDURE IF EXISTS select_customer;
+
+DELIMITER //
+CREATE PROCEDURE select_customer(IN id INT)
+BEGIN
+	SELECT * FROM customer
+    WHERE customerid = id;
+END//
+
+DELIMITER ;
+
+CALL select_customer(1);
+
+
+DROP PROCEDURE IF EXISTS select_all_categories;
+
+DELIMITER //
+CREATE PROCEDURE select_all_categories()
+BEGIN
+	SELECT * FROM category;
+END//
+
+DELIMITER ;
+
+CALL select_all_categories();
+
+
+DROP PROCEDURE IF EXISTS select_category_by_id;
+
+DELIMITER //
+CREATE PROCEDURE select_category_by_id(IN c_id INT)
+BEGIN
+	SELECT * FROM category
+    WHERE categoryid = c_id;
+END//
+
+DELIMITER ;
+
+CALL select_category_by_id(1);
+
+
+DROP PROCEDURE IF EXISTS select_all_brands;
+
+DELIMITER //
+CREATE PROCEDURE select_all_brands()
+BEGIN
+	SELECT * FROM brand;
+END//
+
+DELIMITER ;
+
+CALL select_all_brands();
+
+
+DROP PROCEDURE IF EXISTS select_brands_of_the_same_category;
+
+DELIMITER //
+CREATE PROCEDURE select_brands_of_the_same_category(IN c_id INT)
+BEGIN
+	SELECT * FROM brand
+    WHERE brandid IN
+    (SELECT brand_id
+		FROM brand_to_category
+        WHERE category_id = c_id);
+END//
+
+DELIMITER ;
+
+CALL select_brands_of_the_same_category(1);
+
+
+DROP PROCEDURE IF EXISTS select_product_by_id;
+
+DELIMITER //
+CREATE PROCEDURE select_product_by_id(IN p_id INT)
+BEGIN
+	SELECT * FROM product
+    WHERE productid = p_id;
+END//
+
+DELIMITER ;
+
+CALL select_product_by_id(1);
+
+
+DROP PROCEDURE IF EXISTS select_products_of_one_brand;
+
+DELIMITER //
+CREATE PROCEDURE select_products_of_one_brand(IN b_id INT)
+BEGIN
+	SELECT * FROM product
+    WHERE brand_id = b_id;
+END//
+
+DELIMITER ;
+
+CALL select_products_of_one_brand(1);
+
+
+DROP PROCEDURE IF EXISTS select_products_of_one_category;
+
+DELIMITER //
+CREATE PROCEDURE select_products_of_one_category(IN c_id INT)
+BEGIN
+	SELECT * FROM product
+    WHERE category_id = c_id;
+END//
+
+DELIMITER ;
+
+CALL select_products_of_one_category(1);
+
+
+DROP PROCEDURE IF EXISTS select_products_of_one_category_and_brand;
+
+DELIMITER //
+CREATE PROCEDURE select_products_of_one_category_and_brand(IN c_id INT, IN b_id INT)
+BEGIN
+	SELECT * FROM product
+    WHERE category_id = c_id
+    AND brand_id = b_id;
+END//
+
+DELIMITER ;
+
+CALL select_products_of_one_category_and_brand(1, 2);
+
+
+DROP PROCEDURE IF EXISTS select_customer_id_by_email;
+
+DELIMITER //
+CREATE PROCEDURE select_customer_id_by_email(IN c_email VARCHAR(255))
+BEGIN
+	SELECT customerid FROM customer
+    WHERE customer_email = c_email;
+END//
+
+DELIMITER ;
+
+CALL select_customer_id_by_email('user2@gmail.com');
+
+
+DROP PROCEDURE IF EXISTS select_customer_by_email;
+
+DELIMITER //
+CREATE PROCEDURE select_customer_by_email(IN c_email VARCHAR(255))
+BEGIN
+	SELECT * FROM customer
+    WHERE customer_email = c_email;
+END//
+
+DELIMITER ;
+
+CALL select_customer_by_email('user2@gmail.com');
+
+
+DROP PROCEDURE IF EXISTS select_customer_by_email_and_password;
+
+DELIMITER //
+CREATE PROCEDURE select_customer_by_email_and_password(IN c_email VARCHAR(255),
+IN c_password VARCHAR(32))
+BEGIN
+	SELECT * FROM customer
+    WHERE customer_email = c_email
+    AND customer_password = c_password;
+END//
+
+DELIMITER ;
+
+CALL select_customer_by_email_and_password('user2@gmail.com', '555555');
+
+
+DROP PROCEDURE IF EXISTS select_role_name;
+
+DELIMITER //
+CREATE PROCEDURE select_role_name(IN r_id INT)
+BEGIN
+	SELECT role_name FROM role
+    WHERE roleid = r_id;
+END//
+
+DELIMITER ;
+
+CALL select_role_name(2);
+
+
+DROP PROCEDURE IF EXISTS select_last_order_id;
+
+DELIMITER //
+CREATE PROCEDURE select_last_order_id()
+BEGIN
+	SELECT orderid FROM `order`
+    ORDER BY orderid DESC
+    LIMIT 1;
+END//
+
+DELIMITER ;
+
+CALL select_last_order_id();
+
+
+DROP PROCEDURE IF EXISTS select_customer_full_orders;
+
+DELIMITER //
+CREATE PROCEDURE select_customer_full_orders(IN c_id INT)
+BEGIN
+	SELECT o.orderid, o.order_name, o.order_status, o.order_price, d.address, 
+	o_t_p.product_count, p.product_name, p.product_price
+	FROM `order` AS o
+	JOIN delivery AS d
+	ON d.order_id = o.orderid
+	JOIN order_to_product AS o_t_p
+	ON o_t_p.order_id = o.orderid
+	JOIN product AS p
+	ON p.productid = o_t_p.product_id
+	WHERE o.customer_id = c_id
+    ORDER BY o.orderid DESC;
+END//
+
+DELIMITER ;
+
+CALL select_customer_full_orders(4);
+    
+    
+SELECT * FROM customer
+WHERE role_id = 2
+ORDER BY customer_name DESC;
 
 SELECT -- show products from order with id 3
 product_id
@@ -34,7 +267,7 @@ WHERE customer_email LIKE '%3@_____.%';
 
 SELECT
 product_name,
-product_count,
+product_description,
 product_price 
 FROM product
 WHERE product_price
@@ -42,10 +275,10 @@ BETWEEN 1500 AND 3000;
 
 
 SELECT
-product_count,
+brand_id,
 AVG(product_price) AS price_sum
 FROM product
-GROUP BY product_count
+GROUP BY brand_id
 ORDER BY price_sum DESC;
 
 SELECT
@@ -61,7 +294,7 @@ category_id,
 COUNT(*) AS products_count
 FROM product
 GROUP BY category_id
-HAVING products_count >= 3
+HAVING products_count >= 2
 ORDER BY category_id;
 
 SELECT * FROM `order`
@@ -78,7 +311,7 @@ WHERE customerid IN
 );
 
 
-SELECT * FROM customer -- show customers, which have products from 7 category
+SELECT * FROM customer -- show customers, which have products from 3 category
 WHERE customerid IN 
 (
 	SELECT customer_id FROM `order`
@@ -88,7 +321,7 @@ WHERE customerid IN
 		WHERE product_id IN
         (
 			SELECT productid FROM product 
-            WHERE category_id = 7
+            WHERE category_id = 3
         )
     )
 );
@@ -104,28 +337,19 @@ WHERE productid IN
     )
 );
 
-
-SELECT full_address, short_address FROM address -- show address for delivery for 1st order
-WHERE addressid = 
-(
-	SELECT address_id FROM delivery
-    WHERE order_id = 1
-);
-
-
-SELECT * FROM `order` -- show orders for delivery for 4th address
+SELECT * FROM `order` -- show orders for delivery for 'Delivry street'
 WHERE orderid IN
 (
 	SELECT order_id FROM delivery
-    WHERE address_id = 4
+    WHERE address = 'Delivery street, 10'
 );
 
 
-SELECT * FROM shop -- show 3st manager shops
-WHERE shopid IN
+SELECT * FROM brand -- show brands in 3rd category
+WHERE brandid IN
 (
-	SELECT shop_id FROM manager_to_shop
-    WHERE manager_id = 3
+	SELECT brand_id FROM brand_to_category
+    WHERE category_id = 3
 );
 
 
