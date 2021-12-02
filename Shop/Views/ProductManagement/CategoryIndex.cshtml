@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Меню";
+
+    var brands = ViewData["Brands"] as IEnumerable<Brand>;
+    int currentBrand = (int)ViewData["CurrentBrand"];
+    var currentBrandName = currentBrand != 0 ? brands.FirstOrDefault(g => g.BrandId == currentBrand)?.BrandName : "All";
+}
+
+<h1>@ViewData["CategoryName"]</h1>
+<h3>Products management</h3>
+
+
+<div class="col-2" style="margin-bottom: 10px">
+    <div class="dropdown mt-2">
+        <a class="btn btn-secondary dropdown-toggle" asp-action="CategoryIndex" asp-controller="ProductManagement" asp-route-categoryId="@ViewData["CategoryId"]" role="button"
+           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @currentBrandName
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" asp-action="CategoryIndex" asp-controller="ProductManagement" asp-route-categoryId="@ViewData["CategoryId"]">All</a>
+            @foreach (var item in brands)
+            {
+                <a class="dropdown-item" asp-action="CategoryIndex" asp-controller="ProductManagement" asp-route-categoryId="@ViewData["categoryId"]"
+                   asp-route-brandId="@item.BrandId">@item.BrandName</a>
+            }
+        </div>
+    </div>
+</div>
+
+<tr style="font-size:large">
+    <th>
+        <a asp-action="Add" asp-route-categoryId="@ViewData["CategoryId"]"
+           asp-route-categoryName="@ViewData["CategoryName"]" class="btn btn-outline-success">Add</a>
+    </th>
+    <th>
+        <a asp-controller="CategoryManagement" asp-action="Index" class="btn btn-outline-danger">Back</a>
+    </th>
+</tr>
+
+@if (Model.Any())
+{
+    <table class="table">
+
+        <tr style="font-size:large">
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+        @foreach (Product p in Model)
+        {
+            <tr>
+                <td style="font-weight:bold">@p.ProductName</td>
+                <td>@p.ProductDescription</td>
+                <td>
+                    <a asp-action="Edit" asp-controller="ProductManagement" asp-route-categoryId="@p.CategoryId" asp-route-id="@p.ProductId">Edit</a> |
+                    <a asp-action="Delete" asp-controller="ProductManagement" asp-route-categoryId="@p.CategoryId" asp-route-id="@p.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h3>Categories not found!</h3>
+}

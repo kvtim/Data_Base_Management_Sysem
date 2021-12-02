@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Product>
+
+<h3>Products</h3>
+
+@if (Model.Any())
+{
+    <table class="table">
+
+        <tr style="font-size:large">
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                To cart
+            </th>
+        </tr>
+        @foreach (Product p in Model)
+        {
+            <tr>
+                <td style="font-weight:bold">@p.ProductName</td>
+                <td>@p.ProductDescription</td>
+                <td>
+                    @{ // Getting the current address
+                        var returnUrl = "/Category"; }
+                    <!--Add to cart button markup-->
+                    <p class="mt-2">
+                        <a asp-action="Add" asp-controller="Cart" asp-route-id="@p.ProductId"
+                           asp-route-returnUrl="@returnUrl" class="btn btn-primary">
+                            <i class="fa fa-shopping-cart"></i> Add to cart
+                        </a>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Edit" asp-controller="ProductSearch" asp-route-id="@p.ProductId">Edit</a>
+                            <a asp-action="Delete" asp-controller="ProductSearch" asp-route-id="@p.ProductId">Delete</a>
+                        }
+                    </p>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h3>Products not found!</h3>
+    <a asp-controller="Category" asp-action="Index" class="btn btn-warning">Catalog</a>
+}

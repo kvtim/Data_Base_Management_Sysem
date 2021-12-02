@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Меню";
+
+    var categories = ViewData["Categories"] as IEnumerable<Category>;
+    int currentCategory = (int)ViewData["CurrentCategory"];
+    var currentCategoryName = currentCategory != 0 ? categories.FirstOrDefault(g => g.CategoryId == currentCategory)?.CategoryName : "All";
+}
+
+<h1>@ViewData["BrandName"]</h1>
+<h3>Products management</h3>
+
+
+<div class="col-2" style="margin-bottom: 10px">
+    <div class="dropdown mt-2">
+        <a class="btn btn-secondary dropdown-toggle" asp-action="BrandIndex" asp-controller="ProductManagement" asp-route-brandId="@ViewData["BrandId"]" role="button"
+           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @currentCategoryName
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" asp-action="BrandIndex" asp-controller="ProductManagement" asp-route-brandId="@ViewData["BrandId"]">All</a>
+            @foreach (var item in categories)
+            {
+                <a class="dropdown-item" asp-action="BrandIndex" asp-controller="ProductManagement" asp-route-brandId="@ViewData["BrandId"]"
+                   asp-route-categoryId="@item.CategoryId">@item.CategoryName</a>
+            }
+        </div>
+    </div>
+</div>
+
+
+<tr style="font-size:large">
+    <th>
+        <a asp-action="Add" asp-route-brandId="@ViewData["BrandId"]"
+           asp-route-brandName="@ViewData["BrandName"]" class="btn btn-outline-success">Add</a>
+    </th>
+    <th>
+        <a asp-controller="BrandManagement" asp-action="Index" class="btn btn-outline-danger">Back</a>
+    </th>
+</tr>
+
+@if (Model.Any())
+{
+    <table class="table">
+
+        <tr style="font-size:large">
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+        @foreach (Product p in Model)
+        {
+            <tr>
+                <td style="font-weight:bold">@p.ProductName</td>
+                <td>@p.ProductDescription</td>
+                <td>
+                    <a asp-action="Edit" asp-controller="ProductManagement" asp-route-brandId="@p.BrandId" asp-route-id="@p.ProductId">Edit</a> |
+                    <a asp-action="Delete" asp-controller="ProductManagement" asp-route-brandId="@p.BrandId" asp-route-id="@p.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h3>Products not found!</h3>
+}

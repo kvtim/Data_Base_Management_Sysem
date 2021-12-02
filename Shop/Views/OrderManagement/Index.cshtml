@@ -1,0 +1,92 @@
+﻿@model IEnumerable<FullOrder>
+
+@{
+    var customers = ViewData["Customers"] as IEnumerable<Customer>;
+    int currentCustomer = (int)ViewData["CurrentCustomer"];
+    var currentCustomerName = currentCustomer != 0 ? customers.FirstOrDefault(g => g.CustomerId == currentCustomer)?.CustomerEmail : "All";
+}
+
+<h1>@ViewData["CategoryName"]</h1>
+<h3>Products</h3>
+
+<div class="col-2" style="margin-bottom: 10px">
+    <div class="dropdown mt-2">
+        <a class="btn btn-secondary dropdown-toggle" asp-action="Index" asp-controller="OrderManagement" role="button"
+           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @currentCustomerName
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" asp-action="Index" asp-controller="OrderManagement">All</a>
+            @foreach (var item in customers)
+            {
+                <a class="dropdown-item" asp-action="Index" asp-controller="OrderManagement"
+                   asp-route-customerId="@item.CustomerId">@item.CustomerEmail</a>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    @foreach (FullOrder order in Model)
+    {
+        <div class="card m-2 p-1 font-weight-bold text-center col-7">
+            <div class="card-body">
+                <h3 class="card-title">
+                    @order.OrderName
+                </h3>
+                <div class="col-15">
+                    <div class="dropdown mt-2">
+                        <a class="btn btn-warning dropdown-toggle" asp-action="ChangeStatus" asp-controller="OrderManagement" role="button"
+                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @order.OrderStatus
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" asp-action="ChangeStatus" asp-controller="OrderManagement"
+                               asp-route-orderId="@order.OrderId" asp-route-newStatus="formalized"
+                               asp-route-selectedCustomer="@currentCustomer">formalized</a>
+                            <a class="dropdown-item" asp-action="ChangeStatus" asp-controller="OrderManagement"
+                               asp-route-orderId="@order.OrderId" asp-route-newStatus="sent"
+                               asp-route-selectedCustomer="@currentCustomer">sent</a>
+                            <a class="dropdown-item" asp-action="ChangeStatus" asp-controller="OrderManagement"
+                               asp-route-orderId="@order.OrderId" asp-route-newStatus="delivered"
+                               asp-route-selectedCustomer="@currentCustomer">delivered</a>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="card-title" style="margin-top:10px">
+                    Address: @order.Address
+                </h5>
+                <div class="card-text badge badge-info" style="margin-top:10px">
+                    <h5>Price: @order.OrderPrice $</h5>
+                </div>
+                <h5 class="card-title" style="margin-top:10px">
+                    Created time: @order.OrderTime.ToString()
+                </h5>
+                <h4 class="card-title" style="margin-top:20px">Products</h4>
+                <div>
+                    @foreach (ProductForOrder product in order.Products)
+                    {
+                        <div class="card m-2 p-1">
+                            <h5 class="card-title">
+                                @product.ProductName
+                            </h5>
+                            <p class="card-text">
+                                Count: @product.ProductCount
+                            </p>
+                            <p class="card-text">
+                                Price: @product.ProductPrice $
+                            </p>
+                        </div>
+                    }
+                </div>
+                <a asp-controller="OrderManagement" asp-action="Delete" asp-route-orderId="@order.OrderId"
+                   asp-route-selectedCustomer="@currentCustomer" class="btn btn-danger" style="margin-top:10px">Delete the order</a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h3>Orders not found!</h3>
+}

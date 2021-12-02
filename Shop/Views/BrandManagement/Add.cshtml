@@ -1,0 +1,14 @@
+﻿@model Shop.Models.Brand
+
+<h3>Addition</h3>
+
+<form asp-action="Add" asp-controller="BrandManagement">
+    <div class="form-group">
+        <label asp-for="BrandName" class="control-label">Name</label>
+        <input type="text" asp-for="BrandName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-success" />
+        <button asp-controller="BrandManagement" asp-action="Index" class="btn btn-warning">Back</button>
+    </div>
+</form>

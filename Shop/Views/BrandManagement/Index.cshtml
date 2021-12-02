@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Shop.Models.Brand>
+
+@{
+    ViewData["Title"] = "Brands management";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Add">Create New</a>
+</p>
+
+@if (Model.Any())
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BrandId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BrandName)
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BrandId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BrandName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="BrandManagement" asp-route-brandId="@item.BrandId">Edit</a> |
+                <a asp-action="Delete" asp-controller="BrandManagement" asp-route-brandId="@item.BrandId">Delete</a>
+            </td>
+            <td>
+                <a asp-controller="ProductManagement" asp-action="BrandIndex" asp-route-brandId="@item.BrandId" class="btn btn-outline-success">To products</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+}
+else
+{
+    <h3>Brands not found!</h3>
+}

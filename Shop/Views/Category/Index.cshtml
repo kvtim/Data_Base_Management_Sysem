@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Category>
+
+<h1>Categories</h1>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <tr style="font-size:large">
+            <th>
+                Name
+            </th>
+            <th>
+                Products
+            </th>
+        </tr>
+        @foreach (Category c in Model)
+        {
+            <tr>
+                <td style="font-weight:bold">@c.CategoryName</td>
+                <td>
+                    <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@c.CategoryId" class="btn btn-outline-success">To products</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h3>Categories not found!</h3>
+}

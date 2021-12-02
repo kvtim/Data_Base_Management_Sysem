@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Меню";
+
+    var brands = ViewData["Brands"] as IEnumerable<Brand>;
+    int currentBrand = (int)ViewData["CurrentBrand"];
+    var currentBrandName = currentBrand != 0 ? brands.FirstOrDefault(g => g.BrandId == currentBrand)?.BrandName : "All";
+}
+
+<h1>@ViewData["CategoryName"]</h1>
+<h3>Products</h3>
+
+
+<div class="col-2" style="margin-bottom: 10px">
+    <div class="dropdown mt-2">
+        <a class="btn btn-secondary dropdown-toggle" asp-action="Index" asp-controller="Product" asp-route-categoryId="@ViewData["categoryId"]" role="button"
+           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @currentBrandName
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" asp-action="Index" asp-controller="Product" asp-route-categoryId="@ViewData["categoryId"]">All</a>
+            @foreach (var item in brands)
+            {
+                <a class="dropdown-item" asp-action="Index" asp-controller="Product" asp-route-categoryId="@ViewData["categoryId"]"
+                   asp-route-brand="@item.BrandId">@item.BrandName</a>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    <table class="table">
+
+        <tr style="font-size:large">
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                To cart
+            </th>
+        </tr>
+        @foreach (Product p in Model)
+        {
+            <tr>
+                <td style="font-weight:bold">@p.ProductName</td>
+                <td>@p.ProductDescription</td>
+                <td>
+                    @{ // Getting the current address
+                        var request = ViewContext.HttpContext.Request;
+                        var returnUrl = request.Path + request.QueryString.ToUriComponent(); }
+                    <!--Add to cart button markup-->
+                    <p class="mt-2">
+                        <a asp-action="Add" asp-controller="Cart" asp-route-id="@p.ProductId"
+                           asp-route-returnUrl="@returnUrl" class="btn btn-primary">
+                            <i class="fa fa-shopping-cart"></i> Add to cart
+                        </a>
+                    </p>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h3>Products not found!</h3>
+}

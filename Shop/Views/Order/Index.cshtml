@@ -1,0 +1,53 @@
+﻿@model IEnumerable<FullOrder>
+
+<h1>Orders</h1>
+
+@if (Model.Any())
+{
+    @foreach (FullOrder order in Model)
+    {
+        <div class="card m-2 p-1 font-weight-bold text-center col-7">
+            <div class="card-body">
+                <h3 class="card-title">
+                    @order.OrderName
+                </h3>
+                <div class="card-text badge bg-warning" style="margin-top:10px">
+                    <h5>Status: @order.OrderStatus</h5>
+                </div>
+                <h5 class="card-title" style="margin-top:10px">
+                    Address: @order.Address
+                </h5>
+                <div class="card-text badge badge-info" style="margin-top:10px">
+                    <h5>Price: @order.OrderPrice $</h5>
+                </div>
+                <h5 class="card-title" style="margin-top:10px">
+                    Created time: @order.OrderTime.ToString()
+                </h5>
+                <h4 class="card-title" style="margin-top:20px">Products</h4>
+                <div>
+                    @foreach (ProductForOrder product in order.Products)
+                    {
+                        <div class="card m-2 p-1">
+                            <h5 class="card-title">
+                                @product.ProductName
+                            </h5>
+                            <p class="card-text">
+                                Count: @product.ProductCount
+                            </p>
+                            <p class="card-text">
+                                Price: @product.ProductPrice $
+                            </p>
+                        </div>
+                    }
+                </div>
+                <a asp-action="Delete" asp-route-orderId="@order.OrderId"
+                   class="btn btn-danger" style="margin-top:10px">Delete the order</a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h3>You haven't orders</h3>
+    <a asp-controller="Category" asp-action="Index" class="btn btn-warning">Catalog</a>
+}

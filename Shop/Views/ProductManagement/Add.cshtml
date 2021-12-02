@@ -1,0 +1,50 @@
+﻿@model Shop.Models.Product
+
+<h3>Addition</h3>
+
+@if (ViewData["CategoryName"] != null)
+{
+    <h4>@ViewData["CategoryName"]</h4>
+}
+else
+{
+    <h4>@ViewData["BrandName"]</h4>
+}
+
+<form asp-action="Add" asp-controller="ProductManagement">
+    <div class="form-group">
+        <label asp-for="ProductName" class="control-label">Name</label>
+        <input type="text" asp-for="ProductName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductDescription" class="control-label">Description</label>
+        <input type="text" asp-for="ProductDescription" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductPrice" class="control-label">Price</label>
+        <input type="number" asp-for="ProductPrice" class="form-control" required />
+    </div>
+    @if (ViewData["CategoryId"] != null)
+    {
+        <div class="form-group">
+            <label asp-for="BrandId" class="control-label">Brand</label>
+            <input type="number" asp-for="BrandId" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Add" asp-route-cId="@ViewData["CategoryId"]" class="btn btn-success" />
+            <button asp-controller="ProductManagement" asp-action="CategoryIndex" asp-route-categoryId="@ViewData["CategoryId"]" class="btn btn-warning">Back</button>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <label asp-for="CategoryId" class="control-label">Category</label>
+            <input type="number" asp-for="CategoryId" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Add" asp-route-bId="@ViewData["BrandId"]" class="btn btn-success" />
+            <button asp-controller="ProductManagement" asp-action="BrandIndex" asp-route-brandId="@ViewData["BrandId"]" class="btn btn-warning">Back</button>
+        </div>
+    }
+
+</form>

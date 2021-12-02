@@ -1,0 +1,20 @@
+﻿@model Shop.Models.Category
+
+<h3>Deletion</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>Name</dt>
+        <dd>
+            @Html.DisplayFor(model => model.CategoryName)
+        </dd>
+    </dl>
+
+    <div>
+        <form asp-controller="CategoryManagement" asp-action="Delete" asp-route-categoryId="@Model.CategoryId" method="post">
+            <div class="form-group">
+                <input type="submit" class="btn btn-danger" value="Delete" />
+                <button asp-controller="CategoryManagement" asp-action="Index" class="btn btn-warning">Back</button>
+            </div>
+        </form>
+    </div>
+</div>

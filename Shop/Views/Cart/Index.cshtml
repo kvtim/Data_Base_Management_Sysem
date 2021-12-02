@@ -1,0 +1,56 @@
+﻿@model IEnumerable<CartItem>
+
+<h1>Cart</h1>
+
+@if (Model.Any())
+{
+    <h5 style="margin-top:10px">Total cost: @ViewData["Price"] $</h5>
+    <form asp-action="Checkout" asp-controller="Cart" style="margin-top:20px">
+        <div class="form-group">
+            <label class="control-label">Enter address:</label>
+            <input type="text" name="address" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Checkout" class="btn btn-success" />
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Product.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => item.Product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        <a asp-controller="Cart"
+                           asp-action="Delete" asp-route-id="@item.Product.ProductId"
+                           class="btn btn-outline-danger">
+                            <i class="fas fa-trash-alt">Delete</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>It's empty</h3>
+    <a asp-controller="Category" asp-action="Index" class="btn btn-warning">Catalog</a>
+}

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Shop.Models.Customer>
+
+@{
+    ViewData["Title"] = "Brands management";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerSurname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerEmail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerPassword)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RegistrationTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoleId)
+                </th>
+                <th>
+                    Make admin
+                </th>
+                <th>
+                    Delete
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (item.CustomerEmail == User.Identity.Name)
+                    continue;
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerSurname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerPassword)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegistrationTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoleId)
+                    </td>
+                    <td>
+                        <a asp-action="MakeAdmin" asp-controller="CustomerManagement" asp-route-customerId="@item.CustomerId" class="btn btn-warning">Make Admin</a>
+                    </td>
+                    <td>
+                        <a asp-controller="CustomerManagement" asp-action="Delete" asp-route-customerId="@item.CustomerId" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>Customers not found!</h3>
+}

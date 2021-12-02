@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Shop.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories management";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Add">Create New</a>
+</p>
+
+@if (Model.Any())
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                Actions
+            </th>
+            <th>
+                Products management
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="CategoryManagement" asp-route-categoryId="@item.CategoryId">Edit</a> |
+                <a asp-action="Delete" asp-controller="CategoryManagement" asp-route-categoryId="@item.CategoryId">Delete</a>
+            </td>
+            <td>
+                <a asp-controller="ProductManagement" asp-action="CategoryIndex" asp-route-categoryId="@item.CategoryId" class="btn btn-outline-success">To products</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+}
+else
+{
+    <h3>Categories not found!</h3>
+}
