@@ -56,6 +56,20 @@ DELIMITER ;
 CALL select_category_by_id(1);
 
 
+DROP PROCEDURE IF EXISTS select_brand_by_id;
+
+DELIMITER //
+CREATE PROCEDURE select_brand_by_id(IN b_id INT)
+BEGIN
+	SELECT * FROM brand
+    WHERE brandid = b_id;
+END//
+
+DELIMITER ;
+
+CALL select_brand_by_id(1);
+
+
 DROP PROCEDURE IF EXISTS select_all_brands;
 
 DELIMITER //
@@ -84,6 +98,38 @@ END//
 DELIMITER ;
 
 CALL select_brands_of_the_same_category(1);
+
+
+DROP PROCEDURE IF EXISTS select_categories_of_the_same_brand;
+
+DELIMITER //
+CREATE PROCEDURE select_categories_of_the_same_brand(IN b_id INT)
+BEGIN
+	SELECT * FROM category
+    WHERE categoryid IN
+    (SELECT category_id
+		FROM brand_to_category
+        WHERE brand_id = b_id);
+END//
+
+DELIMITER ;
+
+CALL select_categories_of_the_same_brand(1);
+
+
+DROP PROCEDURE IF EXISTS select_brand_to_category;
+
+DELIMITER //
+CREATE PROCEDURE select_brand_to_category(IN b_id INT, IN c_id INT)
+BEGIN
+	SELECT * FROM brand_to_category
+    WHERE brand_id = b_id
+    AND category_id = c_id;
+END//
+
+DELIMITER ;
+
+CALL select_brand_to_category(1, 1);
 
 
 DROP PROCEDURE IF EXISTS select_product_by_id;
@@ -221,7 +267,7 @@ DROP PROCEDURE IF EXISTS select_customer_full_orders;
 DELIMITER //
 CREATE PROCEDURE select_customer_full_orders(IN c_id INT)
 BEGIN
-	SELECT o.orderid, o.order_name, o.order_status, o.order_price, d.address, 
+	SELECT o.orderid, o.order_name, o.order_status, o.order_price, o.order_time, d.address, 
 	o_t_p.product_count, p.product_name, p.product_price
 	FROM `order` AS o
 	JOIN delivery AS d
@@ -237,8 +283,49 @@ END//
 DELIMITER ;
 
 CALL select_customer_full_orders(4);
+
+
+DROP PROCEDURE IF EXISTS select_all_full_orders;
+
+DELIMITER //
+CREATE PROCEDURE select_all_full_orders()
+BEGIN
+	SELECT o.orderid, o.order_name, o.order_status, o.order_price, o.order_time, d.address, 
+	o_t_p.product_count, p.product_name, p.product_price
+	FROM `order` AS o
+	JOIN delivery AS d
+	ON d.order_id = o.orderid
+	JOIN order_to_product AS o_t_p
+	ON o_t_p.order_id = o.orderid
+	JOIN product AS p
+	ON p.productid = o_t_p.product_id
+    ORDER BY o.orderid DESC;
+END//
+
+DELIMITER ;
+
+CALL select_all_full_orders();
     
     
+    
+CREATE FULLTEXT INDEX idx ON product(product_name, product_description);
+
+
+DROP PROCEDURE IF EXISTS select_products_found;
+
+DELIMITER //
+CREATE PROCEDURE select_products_found(IN search_text VARCHAR(200))
+BEGIN
+	SELECT * FROM product
+	WHERE MATCH (product_name, product_description)
+	AGAINST (search_text IN NATURAL LANGUAGE MODE);
+END//
+
+DELIMITER ;
+
+CALL select_products_found('Great');
+    
+
 SELECT * FROM customer
 WHERE role_id = 2
 ORDER BY customer_name DESC;

@@ -94,8 +94,8 @@ END//
 
 DELIMITER ;
 
-CALL add_role('user');
 CALL add_role('admin');
+CALL add_role('user');
 
 
 DROP PROCEDURE IF EXISTS add_customer;
@@ -111,9 +111,9 @@ END//
 
 DELIMITER ;
 
-CALL add_customer('Admin', 'SurAdmin', 'admin@gmail.com', '333333');
-CALL add_customer('User2', 'SurUser2', 'user2@gmail.com', '555555');
-CALL add_customer('User3', 'SurUser3', 'user3@gmail.com', '999999');
+
+CALL add_customer('User1', 'SurUser1', 'user1@gmail.com', '555555');
+CALL add_customer('User2', 'SurUser2', 'user2@gmail.com', '999999');
 
 
 DROP PROCEDURE IF EXISTS add_order;
@@ -128,6 +128,7 @@ BEGIN
 END//
 
 DELIMITER ;
+select * from `order`;
 
 CALL add_order('Order for User1', 0, 2);
 CALL add_order('Order for User2', 0, 2);
@@ -210,6 +211,37 @@ CALL update_add_to_order_price(3000, 2);
 CALL update_add_to_order_price(7000, 3);
 CALL update_add_to_order_price(5000, 2);
 
+DROP PROCEDURE IF EXISTS update_category;
+
+DELIMITER //
+CREATE PROCEDURE update_category(IN c_id INT, IN c_name VARCHAR(45))
+BEGIN
+	UPDATE category
+	SET 
+    category_name = c_name
+	WHERE categoryid = c_id;
+END//
+
+DELIMITER ;
+
+-- CALL update_category(1, 'Phones');
+
+
+DROP PROCEDURE IF EXISTS update_brand;
+
+DELIMITER //
+CREATE PROCEDURE update_brand(IN b_id INT, IN b_name VARCHAR(100))
+BEGIN
+	UPDATE brand
+	SET 
+    brand_name = b_name
+	WHERE brandid = b_id;
+END//
+
+DELIMITER ;
+
+-- CALL update_brand(1, 'Xiaomi');
+
 
 DROP PROCEDURE IF EXISTS update_product;
 
@@ -247,6 +279,67 @@ DELIMITER ;
 CALL update_product_price(750, 2);
 
 
+DROP PROCEDURE IF EXISTS make_admin;
+
+DELIMITER //
+CREATE PROCEDURE make_admin(IN c_id INT)
+BEGIN
+	UPDATE customer
+	SET role_id = 
+    (SELECT roleid FROM `role`
+	WHERE role_name = 'admin'
+    LIMIT 1)
+	WHERE customerid = c_id;
+END//
+
+DELIMITER ;
+
+CALL make_admin(2);
+
+
+DROP PROCEDURE IF EXISTS delete_category;
+
+DELIMITER //
+CREATE PROCEDURE delete_category(IN c_id INT)
+BEGIN
+	DELETE FROM category
+	WHERE categoryid = c_id;
+END//
+
+DELIMITER ;
+
+CALL delete_category(300);
+
+
+DROP PROCEDURE IF EXISTS delete_brand;
+
+DELIMITER //
+CREATE PROCEDURE delete_brand(IN b_id INT)
+BEGIN
+	DELETE FROM brand
+	WHERE brandid = b_id;
+END//
+
+DELIMITER ;
+
+CALL delete_brand(300);
+
+
+DROP PROCEDURE IF EXISTS delete_brand_to_category;
+
+DELIMITER //
+CREATE PROCEDURE delete_brand_to_category(IN b_id INT, IN c_id INT)
+BEGIN
+	DELETE FROM brand_to_category
+	WHERE brand_id = b_id
+    AND category_id = c_id;
+END//
+
+DELIMITER ;
+
+-- CALL delete_brand_to_category(1, 2);
+
+
 DROP PROCEDURE IF EXISTS delete_product;
 
 DELIMITER //
@@ -275,6 +368,20 @@ DELIMITER ;
 CALL delete_order(1);
 
 
+DROP PROCEDURE IF EXISTS delete_customer;
+
+DELIMITER //
+CREATE PROCEDURE delete_customer(IN c_id INT)
+BEGIN
+	DELETE FROM customer
+	WHERE customerid = c_id;
+END//
+
+DELIMITER ;
+
+CALL delete_customer(1);
+
+
 
 
 select * from delivery;
@@ -288,8 +395,8 @@ select * from delivery;
 select * from `order`;
 
 UPDATE `order`
-SET order_status = "delivered"
-WHERE orderid = 3;
+SET order_status = "sent"
+WHERE orderid = 11;
 
 select * from `order`;
 
