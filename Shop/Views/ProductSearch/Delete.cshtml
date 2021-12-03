@@ -1,4 +1,4 @@
-﻿@model Shop.Models.Product
+﻿@model Shop.Models.FullProduct
 
 <h3>Deletion</h3>
 <div>
@@ -11,6 +11,16 @@
         <dt>Description</dt>
         <dd>
             @Html.DisplayFor(model => model.ProductDescription)
+        </dd>
+
+        <dt>Category</dt>
+        <dd>
+            @Html.DisplayFor(model => model.CategoryName)
+        </dd>
+
+        <dt>Brand</dt>
+        <dd>
+            @Html.DisplayFor(model => model.BrandName)
         </dd>
     </dl>
 

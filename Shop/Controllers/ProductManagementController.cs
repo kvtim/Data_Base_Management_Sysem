@@ -88,6 +88,9 @@ namespace Shop.Controllers
         [HttpGet]
         public IActionResult Add(int? categoryId, string categoryName, int? brandId, string brandName)
         {
+            ViewData["BrandsList"] = brandsSelection.SelectAllBrands();
+            ViewData["CategoriesList"] = categoriesSelection.SelectAllCategories();
+
             if (categoryId != null)
             {
                 ViewData["BrandName"] = null;
@@ -136,6 +139,9 @@ namespace Shop.Controllers
         [HttpGet]
         public IActionResult Edit(int? id, int? categoryId, int? brandId)
         {
+            ViewData["BrandsList"] = brandsSelection.SelectAllBrands();
+            ViewData["CategoriesList"] = categoriesSelection.SelectAllCategories();
+
             if (id != null)
             {
                 Product product = productsSelection.SelectProductById(id);
@@ -161,7 +167,7 @@ namespace Shop.Controllers
         {
             Product prevProduct = productsSelection.SelectProductById(id);
 
-            if (!productsSelection.SelectProductsOfOneCategoryAndBrand(prevProduct.CategoryId, prevProduct.BrandId).Any())
+            if (productsSelection.SelectProductsOfOneCategoryAndBrand(prevProduct.CategoryId, prevProduct.BrandId).Count() <= 1)
                 deletionQueries.DeleteBrandToCategory(prevProduct.BrandId, prevProduct.CategoryId);
 
             if (!brandsSelection.SelectBrandToCategory(product.BrandId, product.CategoryId))
@@ -186,7 +192,7 @@ namespace Shop.Controllers
         {
             if (id != null)
             {
-                Product product = productsSelection.SelectProductById(id);
+                FullProduct product = productsSelection.SelectFullProduct(id);
 
                 if (product != null)
                 {

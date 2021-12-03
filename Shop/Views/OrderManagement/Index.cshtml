@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<FullOrder>
 
+<h1>Orders management</h1>
+
 @{
     var customers = ViewData["Customers"] as IEnumerable<Customer>;
     int currentCustomer = (int)ViewData["CurrentCustomer"];

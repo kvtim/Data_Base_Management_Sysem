@@ -15,22 +15,22 @@
                     @Html.DisplayNameFor(model => model.CustomerId)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CustomerName)
+                    Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CustomerSurname)
+                    Surname
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CustomerEmail)
+                    Email
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CustomerPassword)
+                    Password
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RegistrationTime)
+                    Regostration time
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RoleId)
+                    Role
                 </th>
                 <th>
                     Make admin
@@ -64,9 +64,18 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.RegistrationTime)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RoleId)
-                    </td>
+                    @if (item.RoleId == 1)
+                    {
+                        <td>
+                            Admin
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            User
+                        </td>
+                    }
                     <td>
                         <a asp-action="MakeAdmin" asp-controller="CustomerManagement" asp-route-customerId="@item.CustomerId" class="btn btn-warning">Make Admin</a>
                     </td>

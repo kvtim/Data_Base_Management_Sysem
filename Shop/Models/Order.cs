@@ -11,12 +11,8 @@ namespace Shop.Models
         public string OrderName { get; set; }
         public int OrderPrice { get; set; }
         public DateTime CreatedTime { get; set; }
-        enum Status
-        {
-            Formalizer,
-            Sent,
-            Delivered,
-        }
+        public string OrderStatus { get; set; }
+
 
         public int UserId { get; set; }
     }

@@ -52,6 +52,42 @@ namespace Shop.DatabaseQueries.Selection.Products
             return product;
         }
 
+        public FullProduct SelectFullProduct(int? id)
+        {
+            connection.Open();
+
+            FullProduct product = null;
+
+            using (MySqlCommand command = new MySqlCommand("select_full_product", connection))
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                MySqlParameter parameter = new MySqlParameter("p_id", MySqlDbType.Int32);
+                parameter.Value = id;
+                command.Parameters.Add(parameter);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        product = new FullProduct
+                        {
+                            ProductId = (int)reader[0],
+                            ProductName = (string)reader[1],
+                            ProductDescription = (string)reader[2],
+                            ProductPrice = (int)reader[3],
+                            CategoryName = (string)reader[4],
+                            BrandName = (string)reader[5]
+                        };
+                    }
+                }
+            }
+
+            connection.Close();
+
+            return product;
+        }
+
         public List<Product> SelectProductsOfOneCategory(int? categoryId)
         {
             connection.Open();

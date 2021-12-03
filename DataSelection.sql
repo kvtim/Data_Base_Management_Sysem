@@ -146,6 +146,26 @@ DELIMITER ;
 CALL select_product_by_id(1);
 
 
+DROP PROCEDURE IF EXISTS select_full_product;
+
+DELIMITER //
+CREATE PROCEDURE select_full_product(IN p_id INT)
+BEGIN
+	SELECT p.productid, p.product_name, p.product_description,
+    p.product_price, c.category_name, b.brand_name
+    FROM product AS p
+    JOIN category AS c
+    ON p.category_id = c.categoryid
+    JOIN brand AS b
+    ON p.brand_id = b.brandid
+    WHERE productid = p_id;
+END//
+
+DELIMITER ;
+
+CALL select_full_product(1);
+
+
 DROP PROCEDURE IF EXISTS select_products_of_one_brand;
 
 DELIMITER //

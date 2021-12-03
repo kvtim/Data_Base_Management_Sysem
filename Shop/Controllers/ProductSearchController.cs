@@ -3,6 +3,7 @@ using Shop.DatabaseQueries.Management.Addition;
 using Shop.DatabaseQueries.Management.Deletion;
 using Shop.DatabaseQueries.Management.Update;
 using Shop.DatabaseQueries.Selection.Brands;
+using Shop.DatabaseQueries.Selection.Categories;
 using Shop.DatabaseQueries.Selection.Products;
 using Shop.Models;
 using System;
@@ -22,6 +23,8 @@ namespace Shop.Controllers
 
         BrandsSelection brandsSelection = new BrandsSelection();
 
+        CategoriesSelection categoriesSelection = new CategoriesSelection();
+
         AdditionQueries additionQueries = new AdditionQueries();
 
         public IActionResult Index(string textSearch)
@@ -39,6 +42,9 @@ namespace Shop.Controllers
         {
             if (id != null)
             {
+                ViewData["BrandsList"] = brandsSelection.SelectAllBrands();
+                ViewData["CategoriesList"] = categoriesSelection.SelectAllCategories();
+
                 Product product = productsSelection.SelectProductById(id);
 
                 return View(product);
@@ -51,7 +57,7 @@ namespace Shop.Controllers
         {
             Product prevProduct = productsSelection.SelectProductById(id);
 
-            if (!productsSelection.SelectProductsOfOneCategoryAndBrand(prevProduct.CategoryId, prevProduct.BrandId).Any())
+            if (productsSelection.SelectProductsOfOneCategoryAndBrand(prevProduct.CategoryId, prevProduct.BrandId).Count() <= 1)
                 deletionQueries.DeleteBrandToCategory(prevProduct.BrandId, prevProduct.CategoryId);
 
             if (!brandsSelection.SelectBrandToCategory(product.BrandId, product.CategoryId))
@@ -68,7 +74,7 @@ namespace Shop.Controllers
         {
             if (id != null)
             {
-                Product product = productsSelection.SelectProductById(id);
+                FullProduct product = productsSelection.SelectFullProduct(id);
 
                 if (product != null)
                 {

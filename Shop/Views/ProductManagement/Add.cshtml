@@ -27,8 +27,12 @@ else
     @if (ViewData["CategoryId"] != null)
     {
         <div class="form-group">
-            <label asp-for="BrandId" class="control-label">Brand</label>
-            <input type="number" asp-for="BrandId" class="form-control" required />
+            <select asp-for="BrandId">
+                @foreach (Brand brand in (List<Brand>)ViewData["BrandsList"])
+                {
+                    <option value="@brand.BrandId">@brand.BrandName</option>
+                }
+            </select>
         </div>
         <div class="form-group">
             <input type="submit" value="Add" asp-route-cId="@ViewData["CategoryId"]" class="btn btn-success" />
@@ -38,8 +42,12 @@ else
     else
     {
         <div class="form-group">
-            <label asp-for="CategoryId" class="control-label">Category</label>
-            <input type="number" asp-for="CategoryId" class="form-control" required />
+            <select asp-for="CategoryId">
+                @foreach (Category category in (List<Category>)ViewData["CategoriesList"])
+                {
+                    <option value="@category.CategoryId">@category.CategoryName</option>
+                }
+            </select>
         </div>
         <div class="form-group">
             <input type="submit" value="Add" asp-route-bId="@ViewData["BrandId"]" class="btn btn-success" />
