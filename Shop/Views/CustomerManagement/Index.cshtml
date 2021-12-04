@@ -69,19 +69,25 @@
                         <td>
                             Admin
                         </td>
+                        <td>
+                            User is admin!
+                        </td>
+                        <td>
+                            User is admin!
+                        </td>
                     }
                     else
                     {
                         <td>
                             User
                         </td>
+                        <td>
+                            <a asp-action="MakeAdmin" asp-controller="CustomerManagement" asp-route-customerId="@item.CustomerId" class="btn btn-warning">Make Admin</a>
+                        </td>
+                        <td>
+                            <a asp-controller="CustomerManagement" asp-action="Delete" asp-route-customerId="@item.CustomerId" class="btn btn-danger">Delete</a>
+                        </td>
                     }
-                    <td>
-                        <a asp-action="MakeAdmin" asp-controller="CustomerManagement" asp-route-customerId="@item.CustomerId" class="btn btn-warning">Make Admin</a>
-                    </td>
-                    <td>
-                        <a asp-controller="CustomerManagement" asp-action="Delete" asp-route-customerId="@item.CustomerId" class="btn btn-danger">Delete</a>
-                    </td>
                 </tr>
             }
         </tbody>
